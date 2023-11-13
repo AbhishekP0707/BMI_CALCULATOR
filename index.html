@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        #speedometer-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        #speedometer {
+            width: 300px;
+            height: 150px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #pointer {
+            position: absolute;
+            width: 10px;
+            height: 75px;
+            background-color: #343a40;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            z-index: 2;
+            border-radius: 8px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+    <title>BMI Calculator</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2 class="text-center mb-4">BMI Calculator</h2>
+            <form>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" class="form-control" id="age" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select class="form-control" id="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="height">Height (cm):</label>
+                    <input type="number" class="form-control" id="height" required>
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" class="form-control" id="weight" required>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" onclick="calculateBMI()">Calculate BMI</button>
+            </form>
+            <div id="speedometer-container">
+                <div id="speedometer">
+                    <div id="pointer"></div>
+                </div>
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function calculateBMI() {
+        // Get values from form
+        var age = parseInt(document.getElementById('age').value);
+        var gender = document.getElementById('gender').value;
+        var height = parseFloat(document.getElementById('height').value);
+        var weight = parseFloat(document.getElementById('weight').value);
+
+        // Calculate BMI
+        var bmi = weight / Math.pow(height / 100, 2);
+
+        // Display BMI status
+        displayBMIStatus(bmi);
+    }
+
+    function displayBMIStatus(bmi) {
+        var resultElement = document.getElementById('result');
+        var pointerElement = document.getElementById('pointer');
+
+        var status;
+        var color;
+
+        if (bmi < 18.5) {
+            status = "Underweight";
+            color = "#ffc107"; // Yellow
+        } else if (bmi >= 18.5 && bmi < 24.9) {
+            status = "Normal";
+            color = "#28a745"; // Green
+        } else if (bmi >= 25 && bmi < 29.9) {
+            status = "Overweight";
+            color = "#fd7e14"; // Orange
+        } else {
+            status = "Obesity";
+            color = "#dc3545"; // Red
+        }
+
+        // Update speedometer pointer position
+        var pointerPosition = (bmi - 18.5) / (29.9 - 18.5) * 100;
+        pointerElement.style.transform = "translateX(-50%) translateY(-50%) rotate(" + (pointerPosition - 50) + "deg)";
+
+        // Update result text and color
+        resultElement.innerHTML = "BMI: " + bmi.toFixed(2) + " - " + status;
+        resultElement.style.color = color;
+    }
+</script>
+
+</body>
+</html>
